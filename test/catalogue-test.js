@@ -93,4 +93,35 @@ describe("Catalogue", () => {
         expect(rejectedProduct).to.be.undefined; 
       });
     });
+    describe('search',() => {
+      //beforeEach(function(){
+      //    criteria = {
+      //        type:'Search',
+      //        products:[
+      //            new Product("A129", "shoes", 1, 10, 12),
+      //            new Product("A130", "shower clothes", 2, 10, 25),
+      //            new Product("A131", "bag", 2, 10, 30),
+      //        ]
+      //    }
+      //})
+      it("should return the products whose price is less than (or equal to) the specified value",() => {
+          cat.addProduct(new Product("A129", "shoes", 1, 10, 12));
+          cat.addProduct(new Product("A130", "shower clothes", 2, 10, 25));
+          cat.addProduct(new Product("A131", "bag", 2, 10, 30))
+          const result = cat.search({price: 25})
+          expect(result.MarkedProducts).to.have.lengthOf(5)
+          expect(result.MarkedProducts).to.have.members(["A123","A124","A125","A129","A130"]);
+      })
+      it("should return the products with the keyword in their name",() => {
+          cat.addProduct(new Product("A132", "shoulder bag", 1, 10, 12));
+          const result = cat.search({ keyword: 'sho' })
+          expect(result.MarkedProducts).to.have.lengthOf(1)
+          expect(result.MarkedProducts).to.have.members(["A132"]);
+      })
+      it("should throw an exception when the criteria object has neither key",() => {
+          cat.addProduct(new Product("A133", 1, 10, ));
+          expect(() => cat.search( {key: "Widget"})).to.throw("Bad Batch");
+
+      })
+  })
 });
